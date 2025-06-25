@@ -11,10 +11,11 @@
 #include <time.h>
 
 #define TIME_MS 1000
-#define NE 80
-#define NI 20
+#define NE 1600
+#define NI 400
 
 void stats(float r, float a, float b, float c, float d, float v, float u);
+int print_data(int rows, int cols, float data[rows][cols]);
 float deltav(float v, float u, float I);
 float deltau(float a, float b, float u, float v);
 float resetv(float v, float c);
@@ -25,7 +26,7 @@ int main(void) {
 
 	float r[NE+NI], a[NE+NI], b[NE+NI], c[NE+NI], d[NE+NI], v[NE+NI], u[NE+NI], I[NE+NI], S[NE+NI][NE+NI];
 	int fired[NE+NI] = {0};
-	int record[TIME_MS][NE+NI] = {0};
+	float data[TIME_MS][NE+NI] = {0};
 	
 	// Populate synapse weight matrix
 	for (int x = 0; x < NE+NI; x++) {
@@ -65,7 +66,7 @@ int main(void) {
 	// Run time steps in ms
 	for (int t = 0; t < TIME_MS; t++) {
 
-		printf("t = %d\t", t);
+//		printf("t = %d\t", t);
 
 		for (int i = 0; i < NE+NI; i++) {
 			float R = (float)rand()/RAND_MAX;
@@ -73,18 +74,19 @@ int main(void) {
 
 			if (v[i] >= 30) {
 				fired[i] = 1;
-				record[t][i] = v[i];
+				data[t][i] = v[i];
 				v[i] = resetv(v[i],c[i]);
 //				printf("New v[%d] value: %f\n", i, v[i]);
 				u[i] = resetu(u[i],d[i]);	
 //				printf("New u[%d] value: %f\n", i, u[i]);
 			}
-
+/*
 			if (fired[i] == 1) {
 				printf("|");
 			} else {
 				printf(" ");
 			}
+*/
 		}
 		
 //		printf("\n");
@@ -105,7 +107,7 @@ int main(void) {
 
 		for (int i = 0; i < NE+NI; i++) {fired[i] = 0;}
 
-		printf("\n");
+//		printf("\n");
 	}
 
 	//stats(r, a, b, c, d, v, u);
@@ -139,6 +141,7 @@ int main(void) {
 	for (int i = 0; i < NE+NI; i++) printf("%f ", u[i]);
 	printf("\n--------------------\n");
 */
+	print_data(TIME_MS, NE+NI, data);
 	return 0;
 }
 
@@ -150,6 +153,25 @@ void stats(float r, float a, float b, float c, float d, float v, float u) {
 	printf("d = %f\n", d);
 	printf("v = %f\n", v);
 	printf("u = %f\n", u);
+}
+
+int print_data(int rows, int cols, float data[rows][cols]) {
+	FILE *fp = fopen("output.csv", "w");
+    	if (fp == NULL) {
+        	perror("Unable to open file");
+        	return 1;
+    	}
+
+    	for (int i = 0; i < TIME_MS; ++i) {
+        	for (int j = 0; j < NE+NI; ++j) {
+	            	fprintf(fp, "%.2f", data[i][j]);
+        	    	if (j < NE+NI - 1) fprintf(fp, ",");
+        	}
+        	fprintf(fp, "\n");
+    	}
+
+    	fclose(fp);
+	return 0;
 }
 
 float deltav(float v, float u, float I) {
