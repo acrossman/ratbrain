@@ -20,7 +20,6 @@
 #define C -65
 #define D 8
 #define V -65
-
 #define THRESHOLD 30
 
 /* Prototype functions */
@@ -119,7 +118,8 @@ int main(int argc, char** argv) {
 	for (int t = 0; t < time; t++) {
 
 		for (int i = 0; i < n_cnt; i++) {
-			I[i] = (i < NE) ? 5*randn() : 2*randn();
+//			I[i] = (i < NE) ? 5*randn() : 2*randn();
+			I[i] = 1;
 			if (v[i] >= THRESHOLD) {	// Check threshold voltage
 				fired[i] = 1;
 				data[t][i] = v[i];
