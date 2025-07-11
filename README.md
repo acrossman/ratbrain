@@ -5,24 +5,9 @@ GENERATING DATA
 
 Use the following command to compile ratbrain.c into an executable:
 
-gcc ratbrain.c -o rat -lm
+gcc main.c ratbrain.c -o rat
 
-You can run the program with optional paramters defined by:
-
-./rat NE NI time
-
-examples:
-
-./rat <- uses defaults values of 800, 200, 1000
-./rat 10 <- uses value of 10 for NE
-./rat 800 200 10000 <- uses values of NE = 800, NI = 200, time = 10000
-
-note that you can use the linux function time() to track how long the program takes to execute:
-
-time ./rat
 
 VISUALIZING DATA
 
-graph.py is Gemini AI generated code to graph a rastor plot with usage:
-
-python3 graph.py
+The main.c program I wrote is a simple loop that will create a brain with 100 neurons, track its activity for 1000 ms, destroy and brain, and then repeat forever. I used a simple graphical representaiton that prints pipes for spikes creating a vertical scrolling rastor plot. Not very useful other than to visualize the spiking activity.
